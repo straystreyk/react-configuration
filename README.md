@@ -9,7 +9,7 @@ All what u need is a clone the project and:
 rmdir .git
 ```
 ```
-nopm install || yarn
+npm install || yarn
 ```
 
 Good hacking :)
