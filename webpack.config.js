@@ -2,9 +2,31 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const TerserWebpackPlugin = require("terser-webpack-plugin");
+const CssMinimizerWebpackPlugin = require("css-minimizer-webpack-plugin");
+// const CopyWebpackPlugin = require("copy-webpack-plugin");
+
 const { getGlobals } = require("./config/get-globals");
 
+const isDev = process.env.NODE_ENV === "development";
+const isProd = !isDev;
 const globals = getGlobals();
+const optimization = () => {
+  const config = {
+    splitChunks: {
+      chunks: "all",
+    },
+  };
+
+  if (isProd) {
+    config.minimizer = [
+      new CssMinimizerWebpackPlugin(),
+      new TerserWebpackPlugin(),
+    ];
+  }
+
+  return config;
+};
 
 module.exports = {
   entry: path.join(__dirname, "src", "index.js"),
@@ -17,6 +39,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "src", "public", "index.ejs"),
       alwaysWriteToDisk: true,
+      minify: {
+        collapseWhitespace: isProd,
+      },
       inject: false,
       templateParameters: (options) => {
         const js = Object.keys(options.assets)
@@ -42,6 +67,13 @@ module.exports = {
       filename: "[name].[contenthash].css",
     }),
     new CleanWebpackPlugin(),
+    // if u need to copy file from dev folders to build
+    // new CopyWebpackPlugin([
+    //   {
+    //     from: "",
+    //     to: "",
+    //   },
+    // ]),
   ],
   module: {
     rules: [
@@ -58,6 +90,22 @@ module.exports = {
         use: {
           loader: "ts-loader",
         },
+      },
+      {
+        test: /\.(png|svg|jpg|gif|jpeg)$/,
+        use: ["file-loader"],
+      },
+      {
+        test: /\.(ttf|woff|woff2|eot)$/,
+        use: ["file-loader"],
+      },
+      {
+        test: /\.xml$/,
+        use: ["xml-loader"],
+      },
+      {
+        test: /\.csv$/,
+        use: ["csv-loader"],
       },
       {
         test: /\.css$/,
@@ -80,5 +128,13 @@ module.exports = {
   },
   resolve: {
     extensions: [".js", ".jsx", ".ejs", ".tsx", ".ts"],
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    },
   },
+  devServer: {
+    port: 3007,
+    hot: isDev,
+  },
+  optimization: optimization(),
 };
