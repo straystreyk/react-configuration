@@ -159,5 +159,8 @@ const ServerConfig = {
       },
     ],
   },
+  resolve: {
+    extensions: [".js", ".jsx", ".ts", ".tsx"],
+  },
 };
 module.exports = [ClientConfig, ServerConfig];
