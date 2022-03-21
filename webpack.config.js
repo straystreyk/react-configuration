@@ -4,12 +4,13 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin");
 const CssMinimizerWebpackPlugin = require("css-minimizer-webpack-plugin");
-// const CopyWebpackPlugin = require("copy-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const { getGlobals } = require("./config/get-globals");
 
 const isDev = process.env.NODE_ENV === "development";
 const isProd = !isDev;
+
 const globals = getGlobals();
 const optimization = () => {
   const config = {
@@ -28,16 +29,16 @@ const optimization = () => {
   return config;
 };
 
-module.exports = {
+const ClientConfig = {
   entry: path.join(__dirname, "src", "index.js"),
-  devtool: "inline-source-map",
   output: {
     path: path.join(__dirname, "build"),
     filename: "[name].[contenthash].js",
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "public", "index.ejs"),
+      template: path.join(__dirname, "src", "public", "index_template.ejs"),
+      favicon: "src/public/favicon.ico",
       alwaysWriteToDisk: true,
       minify: {
         collapseWhitespace: isProd,
@@ -61,19 +62,20 @@ module.exports = {
       inject: false,
       minify: false,
       template: path.resolve(__dirname, "config", "render-stats.js"),
-      filename: path.resolve(__dirname, "config", "build-stats.json"),
+      filename: path.join(__dirname, "config", "build-stats.json"),
     }),
     new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css",
     }),
     new CleanWebpackPlugin(),
-    // if u need to copy file from dev folders to build
-    // new CopyWebpackPlugin([
-    //   {
-    //     from: "",
-    //     to: "",
-    //   },
-    // ]),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "src", "public", "favicon.ico"),
+          to: path.resolve(__dirname, "build"),
+        },
+      ],
+    }),
   ],
   module: {
     rules: [
@@ -92,7 +94,7 @@ module.exports = {
         },
       },
       {
-        test: /\.(png|svg|jpg|gif|jpeg)$/,
+        test: /\.(png|svg|jpg|gif|jpeg|ico)$/,
         use: ["file-loader"],
       },
       {
@@ -138,3 +140,24 @@ module.exports = {
   },
   optimization: optimization(),
 };
+
+const ServerConfig = {
+  entry: path.join(__dirname, "server.js"),
+  target: "node",
+  output: {
+    path: path.join(__dirname),
+    filename: "server.[contenthash].js",
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+        },
+      },
+    ],
+  },
+};
+module.exports = [ClientConfig, ServerConfig];
