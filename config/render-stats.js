@@ -3,8 +3,8 @@ function makeTemplateStats(options) {
   const { templateOptions } = htmlWebpackPlugin.options;
 
   const result = Object.assign({}, templateOptions, {
-    js: htmlWebpackPlugin.files.js.map((el) => "./" + el.split("/")[2]),
-    css: htmlWebpackPlugin.files.css.map((el) => "./" + el.split("/")[2]),
+    js: htmlWebpackPlugin.files.js.map((el) => "./" + el),
+    css: htmlWebpackPlugin.files.css.map((el) => "./" + el),
   });
 
   return result;

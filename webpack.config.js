@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const NodeExternals = require("webpack-node-externals");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin");
 const CssMinimizerWebpackPlugin = require("css-minimizer-webpack-plugin");
@@ -29,15 +30,84 @@ const optimization = () => {
   return config;
 };
 
-const ClientConfig = {
-  entry: path.join(__dirname, "src", "index.js"),
+const ServerConfig = {
+  entry: "./server/index.js",
+  target: "node",
+  externals: [NodeExternals()],
   output: {
-    path: path.join(__dirname, "build"),
+    path: path.join(__dirname, "build/server"),
+    filename: "server.js",
+  },
+  resolve: {
+    extensions: [".js", ".jsx", ".ejs", ".tsx", ".ts"],
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: "[name].[contenthash].css",
+    }),
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+        },
+      },
+      {
+        test: /\.(ts|tsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "ts-loader",
+        },
+      },
+      {
+        test: /\.(png|svg|jpg|gif|jpeg|ico)$/,
+        use: ["file-loader"],
+      },
+      {
+        test: /\.(ttf|woff|woff2|eot)$/,
+        use: ["file-loader"],
+      },
+      {
+        test: /\.xml$/,
+        use: ["xml-loader"],
+      },
+      {
+        test: /\.csv$/,
+        use: ["csv-loader"],
+      },
+      {
+        test: /\.css$/,
+        use: {
+          loader: "css-loader",
+          options: {
+            import: false,
+            importLoaders: 1,
+            modules: true,
+          },
+        },
+      },
+      {
+        test: /\.ejs$/,
+        use: { loader: "ejs-compiled-loader", options: {} },
+      },
+    ],
+  },
+};
+
+const ClientConfig = {
+  entry: path.join(__dirname, "src", "index.jsx"),
+  output: {
+    path: path.join(__dirname, "build/client"),
     filename: "[name].[contenthash].js",
   },
+  mode: "development" === process.env.NODE_ENV ? "development" : "production",
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "src", "public", "index_template.ejs"),
+      filename: "start-page.html",
       favicon: "src/public/favicon.ico",
       alwaysWriteToDisk: true,
       minify: {
@@ -130,9 +200,6 @@ const ClientConfig = {
   },
   resolve: {
     extensions: [".js", ".jsx", ".ejs", ".tsx", ".ts"],
-    alias: {
-      "@": path.resolve(__dirname, "src"),
-    },
   },
   devServer: {
     port: 3007,
@@ -141,26 +208,4 @@ const ClientConfig = {
   optimization: optimization(),
 };
 
-const ServerConfig = {
-  entry: path.join(__dirname, "server.js"),
-  target: "node",
-  output: {
-    path: path.join(__dirname),
-    filename: "server.[contenthash].js",
-  },
-  module: {
-    rules: [
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-        },
-      },
-    ],
-  },
-  resolve: {
-    extensions: [".js", ".jsx", ".ts", ".tsx"],
-  },
-};
 module.exports = [ClientConfig, ServerConfig];

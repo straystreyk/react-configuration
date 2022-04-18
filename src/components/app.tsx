@@ -1,12 +1,10 @@
 import * as React from "react";
-import { Test } from "./test";
+import { Hello } from "./hello";
 
-const App: React.FC = ({ children }) => {
+export const App: React.FC = () => {
   return (
     <div>
-      <Test />
+      <Hello />
     </div>
   );
 };
-
-export default App;
