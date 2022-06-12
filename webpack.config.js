@@ -36,7 +36,7 @@ const ServerConfig = {
   externals: [NodeExternals()],
   output: {
     path: path.join(__dirname, "build/server"),
-    filename: "server.js",
+    filename: "index.js",
   },
   resolve: {
     extensions: [".js", ".jsx", ".ejs", ".tsx", ".ts"],
@@ -103,7 +103,7 @@ const ClientConfig = {
     path: path.join(__dirname, "build/client"),
     filename: "[name].[contenthash].js",
   },
-  mode: "development" === process.env.NODE_ENV ? "development" : "production",
+  mode: isDev ? "development" : "production",
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "src", "public", "index_template.ejs"),
@@ -138,14 +138,14 @@ const ClientConfig = {
       filename: "[name].[contenthash].css",
     }),
     new CleanWebpackPlugin(),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: path.resolve(__dirname, "src", "public", "favicon.ico"),
-          to: path.resolve(__dirname, "build"),
-        },
-      ],
-    }),
+    // new CopyWebpackPlugin({
+    //   patterns: [
+    //     {
+    //       from: path.resolve(__dirname, "src", "public", "favicon.ico"),
+    //       to: path.resolve(__dirname, "build"),
+    //     },
+    //   ],
+    // }),
   ],
   module: {
     rules: [

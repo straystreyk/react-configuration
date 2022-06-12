@@ -2,10 +2,14 @@ import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { App } from "./components/app";
 
-
 import "./index.css";
 
-const container = document.getElementById("app")
-const root = ReactDOM.createRoot(container);
+// if without SSR
+const container = document.getElementById("app");
+const root = ReactDOM.hydrateRoot(container, <App />);
 
-root.render(<App />);
+// if with SSR
+// const container = document.getElementById("app");
+// const root = ReactDOM.hydrateRoot(container, <App />);
+//
+// root.render()
