@@ -1,16 +1,16 @@
 {
-  "name": "react_without_cra",
+  "name": "react_configuration",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "cross-env NODE_ENV=production webpack --mode=production",
     "dev": "concurrently \"yarn watch:build\" \"yarn watch:server\"",
     "watch:build": "cross-env NODE_ENV=development webpack --watch",
-    "watch:server": "cross-env NODE_ENV=development nodemon ./build/server/index.js --watch "
+    "watch:server": "cross-env NODE_ENV=development nodemon ./build/server/index.js --watch",
+    "build": "cross-env NODE_ENV=production webpack --mode=production"
   },
   "author": "Tigran Tskanyan <tigran.tskanyan@spbtv.com>",
   "license": "UNLICENSED",
-  "description": "",
+  "description": "Here is a simple config for React SSR App",
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
     "@types/react": "^18.0.5",

@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const React = require("react");
 const ReactDOMServer = require("react-dom/server");
+const { StaticRouter } = require("react-router-dom/server");
 const { App } = require("../src/components/app.tsx");
 
 const app = express();
@@ -16,7 +17,11 @@ app.use("*", (req, res) => {
     }
   );
 
-  let appHTML = ReactDOMServer.renderToString(<App />);
+  const appHTML = ReactDOMServer.renderToString(
+    <StaticRouter location={req.originalUrl}>
+      <App />
+    </StaticRouter>
+  );
   indexHTML = indexHTML.replace(
     '<div id="app"></div>',
     `<div id="app">${appHTML}</div>`

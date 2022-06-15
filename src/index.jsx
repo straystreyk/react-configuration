@@ -3,13 +3,12 @@ import * as ReactDOM from "react-dom/client";
 import { App } from "./components/app";
 
 import "./index.css";
+import { BrowserRouter } from "react-router-dom";
 
-// if without SSR
 const container = document.getElementById("app");
-const root = ReactDOM.hydrateRoot(container, <App />);
-
-// if with SSR
-// const container = document.getElementById("app");
-// const root = ReactDOM.hydrateRoot(container, <App />);
-//
-// root.render()
+const root = ReactDOM.hydrateRoot(
+  container,
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+);

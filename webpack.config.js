@@ -1,10 +1,10 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const NodeExternals = require("webpack-node-externals");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin");
 const CssMinimizerWebpackPlugin = require("css-minimizer-webpack-plugin");
+const NodeExternals = require("webpack-node-externals");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const { getGlobals } = require("./config/get-globals");
@@ -37,14 +37,15 @@ const ServerConfig = {
   output: {
     path: path.join(__dirname, "build/server"),
     filename: "index.js",
+    publicPath: "/",
   },
   resolve: {
     extensions: [".js", ".jsx", ".ejs", ".tsx", ".ts"],
   },
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: "[name].[contenthash].css",
-    }),
+    // new MiniCssExtractPlugin({
+    //   filename: "[name].[contenthash].css",
+    // }),
   ],
   module: {
     rules: [
@@ -84,14 +85,12 @@ const ServerConfig = {
           loader: "css-loader",
           options: {
             import: false,
-            importLoaders: 1,
-            modules: true,
+            modules: {
+              localIdentName: "[path][name]__[local]--[hash:base64:5]",
+              namedExport: true,
+            },
           },
         },
-      },
-      {
-        test: /\.ejs$/,
-        use: { loader: "ejs-compiled-loader", options: {} },
       },
     ],
   },
@@ -187,7 +186,10 @@ const ClientConfig = {
             loader: "css-loader",
             options: {
               importLoaders: 1,
-              modules: true,
+              modules: {
+                localIdentName: "[path][name]__[local]--[hash:base64:5]",
+                namedExport: true,
+              },
             },
           },
         ],

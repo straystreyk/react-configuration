@@ -1,6 +1,11 @@
 import * as React from "react";
-import styles from "./test.module.css";
+import { popa } from "./test.module.css";
+import { Link } from "react-router-dom";
 
-export const Hello: React.FC = () => (
-  <div className={styles.popa}>Hello config</div>
-);
+export const Hello: React.FC = () => {
+  return (
+    <div className={popa}>
+      Hello config <Link to="/about">Go to about page</Link>
+    </div>
+  );
+};
