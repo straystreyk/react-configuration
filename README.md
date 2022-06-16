@@ -1,6 +1,7 @@
 # React initial configuration
 
-###About
+### About 
+
 This project needs to create react application without
 boilerplate's like Create React App or smth like that
 
