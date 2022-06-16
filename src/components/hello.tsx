@@ -4,16 +4,17 @@ import { Link } from "react-router-dom";
 import { StoreType } from "../store";
 
 interface HelloProps {
-  store: StoreType
+  store: StoreType;
 }
 export const Hello: React.FC<HelloProps> = ({ store }) => {
-  console.log(store);
-
   return (
-    <div className={popa}>
-      color: {store.state.color}
-      <br />
-      Hello config <Link to="/about">Go to about page</Link>
-    </div>
+    <>
+      <h1>Hello config</h1>
+      <div className={popa}>
+        <p>color: {store.state.color}</p>
+        <p>User id: {store.state.data.userId}</p>
+        <Link to="/about">Go to about page</Link>
+      </div>
+    </>
   );
 };

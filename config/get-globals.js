@@ -4,7 +4,7 @@ dotenv.config();
 const globals = {};
 
 const getGlobals = () => {
-  if (process.env.APP_IP) globals.APP_IP = process.env.APP_IP;
+  if (process.env.APP_PORT) globals.APP_PORT = process.env.APP_PORT;
   return globals;
 };
 

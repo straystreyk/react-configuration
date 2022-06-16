@@ -8,8 +8,7 @@ import { Store } from "./store";
 
 const container = document.getElementById("app");
 
-
-const store = new Store(window._SSR_STORE_)
+const store = new Store(window._SSR_STORE_);
 const root = ReactDOM.hydrateRoot(
   container,
   <BrowserRouter>
