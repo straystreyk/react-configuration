@@ -31,7 +31,7 @@ const optimization = () => {
 };
 
 const ServerConfig = {
-  entry: "./server/index.js",
+  entry: "./server/index.tsx",
   target: "node",
   externals: [NodeExternals()],
   output: {
@@ -97,7 +97,7 @@ const ServerConfig = {
 };
 
 const ClientConfig = {
-  entry: path.join(__dirname, "src", "index.jsx"),
+  entry: path.join(__dirname, "src", "index.tsx"),
   output: {
     path: path.join(__dirname, "build/client"),
     filename: "[name].[contenthash].js",

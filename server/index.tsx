@@ -1,3 +1,5 @@
+import { Store, StoreType } from "../src/store";
+
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
@@ -8,8 +10,12 @@ const { App } = require("../src/components/app.tsx");
 
 const app = express();
 
+const prepareSsr = async (store: StoreType) => {
+  store.state.color = 'blue'
+}
+
 app.use(express.static(path.resolve(__dirname, "../client")));
-app.use("*", (req, res) => {
+app.use("*", async (req, res) => {
   let indexHTML = fs.readFileSync(
     path.resolve(__dirname, "../client/start-page.html"),
     {
@@ -17,14 +23,20 @@ app.use("*", (req, res) => {
     }
   );
 
+  const store = new Store()
+  await prepareSsr(store)
+
   const appHTML = ReactDOMServer.renderToString(
     <StaticRouter location={req.originalUrl}>
-      <App />
+      <App store={store} />
     </StaticRouter>
   );
   indexHTML = indexHTML.replace(
     '<div id="app"></div>',
-    `<div id="app">${appHTML}</div>`
+    `
+      <script type="text/javascript">window._SSR_STORE_ = ${JSON.stringify(store.state)}; </script>
+      <div id="app">${appHTML}</div>
+    `
   );
 
   res.contentType("text/html");
