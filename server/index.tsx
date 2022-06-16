@@ -3,7 +3,6 @@ import path from "path";
 import React from "react";
 import dotenv from "dotenv";
 import express from "express";
-import fetch from "node-fetch";
 import ReactDOMServer from "react-dom/server";
 import { StaticRouter } from "react-router-dom/server";
 import { Store, StoreType } from "../src/store";
@@ -16,9 +15,7 @@ const prepareSsr = async (store: StoreType, url: string) => {
   store.state.color = "blue";
 
   if (url === "/") {
-    const s = await fetch("https://jsonplaceholder.typicode.com/todos/1");
-    const d = (await s.json()) as { userId: number };
-    store.state.data = d;
+    store.state.data = { userId: 1 };
   }
 };
 
