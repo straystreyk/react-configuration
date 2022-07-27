@@ -12,6 +12,7 @@
   "license": "UNLICENSED",
   "description": "Here is a simple config for React SSR App",
   "dependencies": {
+    "@reduxjs/toolkit": "^1.8.3",
     "concurrently": "^7.2.1",
     "dotenv": "^16.0.0",
     "ejs": "^3.0.2",
@@ -19,7 +20,9 @@
     "mini-css-extract-plugin": "^2.6.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "react-router-dom": "^6.3.0"
+    "react-redux": "^8.0.2",
+    "react-router-dom": "^6.3.0",
+    "redux": "^4.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
